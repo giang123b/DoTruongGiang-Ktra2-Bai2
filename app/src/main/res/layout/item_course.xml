@@ -45,9 +45,10 @@
                 android:layout_height="wrap_content"
                 android:text="Major"
                 />
-            <TextView
-                android:id="@+id/textViewActive"
-                android:layout_width="match_parent"
+
+            <CheckBox
+                android:id="@+id/checkboxActive"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Active"
                 />

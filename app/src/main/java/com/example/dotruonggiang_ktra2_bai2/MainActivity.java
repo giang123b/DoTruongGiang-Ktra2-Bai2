@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(View view) {
 
                         String active = "Not active";
-                        if (checkboxActive.isSelected()) {
+                        if (checkboxActive.isChecked()) {
                             active = "Active";
                         }
 
@@ -157,8 +157,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void getData() {
         mCourse.addAll(databaseHelper.getAllCourse());
-
-
+        setRecyclerView();
     }
 
     private void getView() {

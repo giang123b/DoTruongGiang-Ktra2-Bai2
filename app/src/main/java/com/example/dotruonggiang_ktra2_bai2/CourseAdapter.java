@@ -6,13 +6,16 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
+import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -33,6 +36,13 @@ public class CourseAdapter extends
 
     DBHelper databaseHelper;
 
+
+     Button buttonStartTime;
+    String date_time = "";
+    int mYear;
+    int mMonth;
+    int mDay;
+
     public CourseAdapter(ArrayList<Course> Courses) {
         mDisplayedValues = Courses;
         objects = Courses;
@@ -52,26 +62,123 @@ public class CourseAdapter extends
 
     @Override
     public void onBindViewHolder(@NonNull CourseViewHolder holder, int position) {
-        Course Course = mDisplayedValues.get(position);
+        Course course = mDisplayedValues.get(position);
 
-        holder.textViewName.setText(Course.getName());
-        holder.textViewDate.setText(Course.getDate());
-        holder.textViewMajor.setText(Course.getMajor());
-        holder.textViewActive.setText(Course.getActive());
+        holder.textViewName.setText(course.getName());
+        holder.textViewID.setText(course.getId());
+        holder.textViewDate.setText(course.getDate());
+        holder.textViewMajor.setText(course.getMajor());
+        if (course.getActive().equals("Active")) {
+            holder.checkBoxActive.setChecked(true);
+        }
         holder.buttonXoa.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mDisplayedValues.remove(position);
-                databaseHelper.deleteCourse(Integer.parseInt(Course.getId()));
+                databaseHelper.deleteCourse(Integer.parseInt(course.getId()));
                 notifyDataSetChanged();
             }
         });
-
 
         holder.buttonEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
+                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(mContext);
+                LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                View dialogView = inflater.inflate(R.layout.add_new_course, null);
+                dialogBuilder.setView(dialogView);
+
+                EditText editTextName = dialogView.findViewById(R.id.editTextName);
+                buttonStartTime = dialogView.findViewById(R.id.buttonStartTime);
+                Spinner spinnerMajor = dialogView.findViewById(R.id.spinnerMajor);
+                CheckBox checkboxActive = dialogView.findViewById(R.id.checkboxActive);
+                Button buttonSave = dialogView.findViewById(R.id.buttonSave);
+                Button buttonCancel = dialogView.findViewById(R.id.buttonCancel);
+
+                Spinner dropdown = dialogView.findViewById(R.id.spinnerMajor);
+                String[] items = new String[]{"Tieng anh", "cntt", "kinh te", "truyen thong"};
+                ArrayAdapter<String> adapter = new ArrayAdapter(mContext, android.R.layout.simple_spinner_dropdown_item, items);
+                dropdown.setAdapter(adapter);
+
+                editTextName.setText(course.getName());
+                buttonStartTime.setText(course.getDate());
+                if (course.getMajor().equals("Tieng anh")){
+                    spinnerMajor.setSelection(0);
+                }
+
+                if (course.getMajor().equals("cntt")){
+                    spinnerMajor.setSelection(1);
+                }
+
+                if (course.getMajor().equals("kinh te")){
+                    spinnerMajor.setSelection(2);
+                }
+
+                if (course.getMajor().equals("truyen thong")){
+                    spinnerMajor.setSelection(3);
+                }
+
+                if (course.getActive() == "Active"){
+                    checkboxActive.setChecked(true);
+                }
+
+
+                AlertDialog alertDialog = dialogBuilder.create();
+                alertDialog.show();
+
+
+                buttonStartTime.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        final Calendar c = Calendar.getInstance();
+                        mYear = c.get(Calendar.YEAR);
+                        mMonth = c.get(Calendar.MONTH);
+                        mDay = c.get(Calendar.DAY_OF_MONTH);
+
+                        DatePickerDialog datePickerDialog = new DatePickerDialog(mContext,
+                                new DatePickerDialog.OnDateSetListener() {
+
+                                    @Override
+                                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+
+                                        date_time = dayOfMonth + "-" + (monthOfYear + 1) + "-" + year;
+
+                                        buttonStartTime.setText(date_time);
+                                    }
+                                }, mYear, mMonth, mDay);
+                        datePickerDialog.show();
+                    }
+                });
+                buttonCancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        alertDialog.dismiss();
+                    }
+                });
+
+                buttonSave.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        String active = "Not active";
+                        if (checkboxActive.isChecked()) {
+                            active = "Active";
+                        }
+
+                        Course course = new Course("1", editTextName.getText().toString(),
+                                buttonStartTime.getText().toString(),
+                                spinnerMajor.getSelectedItem().toString(), active);
+
+
+                        databaseHelper.insertCourse(course);
+
+                        notifyDataSetChanged();
+
+                        alertDialog.dismiss();
+                    }
+                });
             }
         });
 
