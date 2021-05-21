@@ -13,12 +13,6 @@
         android:orientation="horizontal"
         android:padding="8dp"
         >
-        <ImageView
-            android:id="@+id/imageAvatar"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:src="@drawable/ic_launcher_background"
-            />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -40,22 +34,22 @@
                 android:text="name"
                 />
             <TextView
-                android:id="@+id/textViewDateOrder"
+                android:id="@+id/textViewDate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="dateOrder"
+                android:text="date"
                 />
             <TextView
-                android:id="@+id/textViewPrice"
+                android:id="@+id/textViewMajor"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="price,"
+                android:text="Major"
                 />
             <TextView
-                android:id="@+id/textViewRatingOrder"
+                android:id="@+id/textViewActive"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="ratingOrder"
+                android:text="Active"
                 />
 
             <LinearLayout
