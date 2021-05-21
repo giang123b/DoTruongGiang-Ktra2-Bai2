@@ -151,6 +151,7 @@ public class CourseAdapter extends
                         datePickerDialog.show();
                     }
                 });
+
                 buttonCancel.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -167,12 +168,16 @@ public class CourseAdapter extends
                             active = "Active";
                         }
 
-                        Course course = new Course("1", editTextName.getText().toString(),
+                        Course moi = new Course(course.getId(), editTextName.getText().toString(),
                                 buttonStartTime.getText().toString(),
                                 spinnerMajor.getSelectedItem().toString(), active);
 
+                        course.setName(editTextName.getText().toString());
+                        course.setMajor(spinnerMajor.getSelectedItem().toString());
+                        course.setDate(buttonStartTime.getText().toString());
+                        course.setActive(active);
 
-                        databaseHelper.insertCourse(course);
+                        databaseHelper.updateCourse(moi);
 
                         notifyDataSetChanged();
 
